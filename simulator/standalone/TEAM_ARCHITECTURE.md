@@ -13,10 +13,8 @@ This is the team's agreed integration contract for `simulator/standalone/`. It i
 
 ```text
 index.html                         Shared page, one A-Frame scene, shared input, script order
-data/i18n.js                       Thai UI text data; edit text here, not in shell logic
-shared/camera-locations.js          Per-module camera positions and rotations
-shared/room-structure.js            Shared 8 m x 8 m room shell with 8 m walls
- src/main.js                       Navigation, room registry, shared API/session and shell mounting
+ data/i18n.js                      Thai UI text data; edit text here, not in shell logic
+ src/main.js                       Navigation, room registry, shared API/session
  src/rooms/hub/                    Main Hub lifecycle, models, and interactions
  src/rooms/<room-id>/room.js       Required room factory and mount/unmount lifecycle
  src/rooms/<room-id>/              Room-owned optional data, game, models, interactions, styles
@@ -26,10 +24,6 @@ shared/room-structure.js            Shared 8 m x 8 m room shell with 8 m walls
 Every room uses the same required entry file, `room.js`. A team may add as many supporting files as needed (for example `data.js`, `game.js`, `models.js`, `interactions.js`, or `room.css`). Keep each room's code and assets under its own folder. Supporting JavaScript files must be included in `index.html` before that room's `room.js`; all room registrations and shared API changes are coordinated by the integration owner in `src/main.js`.
 
 The Main Hub is the shared `hub` module under `src/rooms/hub/`, and follows the same `mount(container)` / `unmount()` lifecycle. Its model code is in `models.js`, click/navigation handling is in `interactions.js`, and lifecycle wiring is in `room.js`. The shell in `src/main.js` still owns the room registry and shared services. Learning rooms are `hardware`, `programming`, and `network`.
-
-## Per-room camera locations
-
-The shell adds the structure from `shared/room-structure.js` for the Hub and each learning room. Every room uses an 8 m x 8 m interior with 8 m wall height and a ceiling at 8 m. The shell also applies the camera settings from `shared/camera-locations.js` whenever it enters a module or returns to the Hub. Each module has a `position` in meters and a `rotation` in degrees. Room teams can adjust their own entry in that file without changing `index.html` or the room code. Keep the camera in world coordinates; a rotation of `0, 0, 0` looks toward negative Z. If a change affects one room camera, include the `shared/camera-locations.js` file in that commit along with room-owned changes. Coordinate edits if several teams need to change this shared file at the same time.
 
 ## Room registration and lifecycle
 
@@ -90,7 +84,7 @@ Do not call `setLanguage`: language selection is outside API v1 because the appl
 - Any A-Frame object meant to be activated by mouse or VR laser must have `class="selectable"`.
 - Handle the resulting `click` event and use event delegation where practical. Mouse and controller actions must call the same room action; do not create a separate controller-only game rule.
 - If the room listens on `context.scene`, check that the event target belongs to that room before handling it. Remove the listener in `unmount()`.
-- Keep the shell's toolbar, room registry, shared services, controller entities, and scene setup in `index.html`/`src/main.js`. Per-module camera positions and rotations are configured in `shared/camera-locations.js`; shared dimensions and shell geometry are owned by `shared/room-structure.js`. Hub visual models belong in `src/rooms/hub/models.js`; room code owns only its own scene content.
+- Keep the shell's toolbar, room registry, shared services, camera, controller entities, and scene setup in `index.html`/`src/main.js`. Hub visual models belong in `src/rooms/hub/models.js`; room code owns only its own scene content.
 
 ## Add a room or supporting file
 
@@ -102,8 +96,5 @@ Do not call `setLanguage`: language selection is outside API v1 because the appl
 6. Check mouse click, VR laser click when headset/browser are available, entering/leaving/re-entering, hub return, and cleanup before integration.
 
 Do not change API v1, the scene element, shared input behavior, room IDs, or script order without coordinating with the integration owner. This agreement lets room teams implement independently while sharing one predictable interface.
-
-
-
 
 

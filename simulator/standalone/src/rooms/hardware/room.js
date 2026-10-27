@@ -8,7 +8,7 @@ window.SimulatorRooms.hardware = function createHardwareRoom(context) {
   function refreshText() { if (mounted) panel.querySelectorAll('[data-key]').forEach(function (node) { node.setAttribute('value', context.i18n.t(node.dataset.key)); }); }
   return {
     mount: function (container) {
-      var sceneRoot = el('a-entity', { position: '0 1.3 -1.4' });
+      var sceneRoot = el('a-entity', { position: '0 1.3 -3' });
       panel = el('a-entity', {});
       var title = el('a-text', { position: '-1.5 1.4 0', width: '3', align: 'center', color: '#67e8f9' });
       title.dataset.key = 'hardware.title';
@@ -66,4 +66,3 @@ window.SimulatorRooms.hardware = function createHardwareRoom(context) {
     }
   };
 };
-

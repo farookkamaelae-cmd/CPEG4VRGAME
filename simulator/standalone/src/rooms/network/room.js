@@ -34,7 +34,7 @@ window.SimulatorRooms.network = function createNetworkRoom(context) {
   }
   return {
     mount: function (container) {
-      root = el('a-entity', { position: '0 0 -1.2' });
+      root = el('a-entity', { position: '0 0 -2' });
       root.append(text(context.i18n.t('network.title'), '-2 3 0', 4, '#67e8f9'));
       root.append(text(context.i18n.t('network.description'), '-2 2.6 0', 4, '#e2e8f0'));
       root.append(text(context.i18n.t('network.instruction'), '-2 2.15 0', 4, '#bae6fd'));
@@ -67,4 +67,3 @@ window.SimulatorRooms.network = function createNetworkRoom(context) {
     unmount: function () { if (root && onClick) root.removeEventListener('click', onClick); if (root) root.remove(); root = null; slots = []; onClick = null; }
   };
 };
-

@@ -75,43 +75,48 @@ window.SimulatorHub.Models = {
     }
 
     var root = el('a-entity', { 'data-hub-root': '' });
-    cylinder(root, '0 -.08 0', 8.8, .18, '#2e4058');
-    cylinder(root, '0 5.95 0', 8.8, .16, '#122237');
-    cylinder(root, '0 3.0 0', 8.75, 6, '#1e3550', { 'open-ended': true, 'segments-radial': 28, 'theta-start': 0, 'theta-length': 360 });
-    cylinder(root, '0 3.0 0', 8.7, 5.95, '#294867', { 'open-ended': true, 'segments-radial': 28, 'theta-start': 15, 'theta-length': 110, scale: '1 1 .998' });
-    cylinder(root, '0 3.0 0', 8.7, 5.95, '#294867', { 'open-ended': true, 'segments-radial': 28, 'theta-start': 135, 'theta-length': 110, scale: '1 1 .998' });
-    cylinder(root, '0 3.0 0', 8.7, 5.95, '#294867', { 'open-ended': true, 'segments-radial': 28, 'theta-start': 255, 'theta-length': 110, scale: '1 1 .998' });
-
-    [0, 120, 240].forEach(function (deg) {
-      var r = deg * Math.PI / 180;
-      box(root, (Math.sin(r) * 3.5).toFixed(3) + ' 5.82 ' + (-Math.cos(r) * 3.5).toFixed(3), [1.8, .04, 1.3], '#d9f8ff', {
-        rotation: '0 ' + deg + ' 0',
-        material: 'color:#d9f8ff; emissive:#c0eeff; emissiveIntensity:.55'
-      });
+    // Shared-team room envelope: exact 8 x 8 footprint, height 8.
+    // Safe interior usable bounds: x/z +/-3.9; ceiling at y=8.
+    box(root, '0 -.09 0', [8, .18, 8], '#31465d');
+    box(root, '0 8.03 0', [8, .10, 8], '#102239');
+    box(root, '0 4 -4', [8, 8, .13], '#1b334b');
+    box(root, '-4 4 0', [.13, 8, 8], '#28445f');
+    box(root, '4 4 0', [.13, 8, 8], '#28445f');
+    box(root, '0 4 4', [8, 8, .13], '#243f58');
+    // Central arrival marker; subdued to avoid overwhelming the scene.
+    cylinder(root, '0 .015 .15', .63, .028, '#27687d', {material:'color:#27687d; emissive:#146177; emissiveIntensity:.15'});
+    // Ceiling lighting scaled to the room.
+    [-2, 0, 2].forEach(function(x) {
+      box(root, x + ' 7.86 -.7', [1.13, .045, 1.25], '#c7f0ff', {material:'color:#c7f0ff; emissive:#b6edfa; emissiveIntensity:.32'});
     });
-
-    cylinder(root, '0 .02 0', 1.6, .06, '#19354c');
-    cylinder(root, '0 .06 0', 1.72, .03, '#3be5f1', { material: 'color:#3be5f1; emissive:#2ab8c9; emissiveIntensity:.5' });
-    label(root, 'LEARNING HUB', '-1.3 .18 .08', 2.6, '#c8f4ff');
-    label(root, 'มองไปรอบตัว แล้วเลือกมุมที่ต้องการเรียนรู้', '0 .18 -.28', 4.0, '#e7f3fa');
-
-    [0, 120, 240].forEach(function (deg) {
-      var rr = deg * Math.PI / 180;
-      box(root, (Math.sin(rr) * 3.35).toFixed(3) + ' -.003 ' + (-Math.cos(rr) * 3.35).toFixed(3), [.012, .012, 3.1], '#5b7c94', { rotation: '0 ' + deg + ' 0' });
-    });
-
-    [60, 180, 300].forEach(function (deg) {
-      var r = deg * Math.PI / 180;
-      var x = Math.sin(r) * 6.5;
-      var z = -Math.cos(r) * 6.5;
-      cylinder(root, x.toFixed(3) + ' .32 ' + z.toFixed(3), .36, .62, '#0f2435');
-      for (var n = 0; n < 5; n++) {
-        box(root, (x + (n - 2) * .08).toFixed(3) + ' .95 ' + z.toFixed(3), [.06, .72, .05], '#1ca585', { rotation: '0 0 ' + ((n - 2) * 10) });
-      }
+    // Windows on open wall sections, away from the boards.
+    function windowPanel(x, z, yaw) {
+      var g = entity(root, x + ' 0 ' + z, '0 ' + yaw + ' 0');
+      box(g, '0 4.7 0', [1.32, 1.45, .08], '#0c263b');
+      box(g, '0 4.7 .048', [1.15, 1.26, .012], '#528aa9');
+      box(g, '0 4.7 .07', [.07, 1.36, .055], '#c5dae5');
+      box(g, '0 4.7 .07', [1.23, .07, .055], '#c5dae5');
+      box(g, '0 3.94 .08', [1.4, .1, .17], '#aac2d3');
+    }
+    windowPanel(-3.88, 2.65, 90);
+    windowPanel(3.88, 2.65, -90);
+    // Rear learning posters and shelving.
+    var poster = entity(root, '0 0 3.86', '0 180 0');
+    box(poster, '0 4.45 0', [2.1, 1.03, .07], '#e8f0f6');
+    box(poster, '0 4.88 .04', [1.95, .13, .02], '#329bb7');
+    label(poster, 'COMPUTER ENGINEERING', '0 4.62 .05', 1.77, '#1a364b');
+    label(poster, 'HARDWARE  /  LAN  /  CODE', '0 4.36 .05', 1.7, '#2d536e');
+    // Cabinets and plants confined to corners.
+    [-3.34, 3.34].forEach(function(x) {
+      box(root, x + ' .65 3.35', [.66, 1.27, .56], '#1b354a');
+      box(root, x + ' .66 3.06', [.48, .9, .02], '#365f75');
+      cylinder(root, x + ' 1.48 3.36', .21, .24, '#a7b9c3');
+      for(var n=0;n<4;n++) box(root, (x+(n-1.5)*.09)+' 1.81 3.36', [.06,.47,.06], '#31ab85', {rotation:'0 0 '+((n-1.5)*12)});
     });
 
     function station(zone, pos, rot, color, title, tagline) {
       var s = entity(root, pos, rot);
+      s.setAttribute('scale', '0.68 0.77 0.68');
       cylinder(s, '0 .13 0', 2.62, .24, '#1b3149', { segmentsRadial: 6, rotation: '0 30 0' });
       box(s, '0 2.0 -1.02', [4.7, 3.1, .18], '#13243a');
       box(s, '0 3.57 -.90', [4.78, .09, .16], color, { material: 'color:' + color + '; emissive:' + color + '; emissiveIntensity:.35' });
@@ -126,7 +131,7 @@ window.SimulatorHub.Models = {
       return s;
     }
 
-    var h = station('hardware', '-5.05 0 -2.35', '0 52 0', '#24d6bd', 'HARDWARE', '7 COMPUTER COMPONENTS');
+    var h = station('hardware', '-2.35 0 0.15', '0 76 0', '#24d6bd', 'HARDWARE', '7 COMPUTER COMPONENTS');
     box(h, '-.95 1.62 -.78', [1.95, .92, .09], '#1b7269');
     for (var i = 0; i < 5; i++) box(h, (-1.66 + i * .35) + ' 1.56 -.735', [.03, .67, .025], '#7de5cd');
     box(h, '-1.24 1.64 -.71', [.58, .58, .07], '#b5c7d4');
@@ -138,7 +143,7 @@ window.SimulatorHub.Models = {
     box(h, '-1.52 1.16 -.48', [.52, .18, .34], '#1d2b3b');
     label(h, 'CPU  RAM  GPU  SSD', '0 2.44 -.88', 3.35, '#c9f6ed');
 
-    var nw = station('network', '0 0 -3.88', '0 0 0', '#f5c44e', 'LAN NETWORK', 'TOOLS / RJ45 / T568B');
+    var nw = station('network', '0 0 -2.47', '0 0 0', '#f5c44e', 'LAN NETWORK', 'TOOLS / RJ45 / T568B');
     for (i = 0; i < 8; i++) {
       box(nw, (-1.48 + i * .42) + ' 1.72 -.78', [.19, .82, .11], ['#ffecd9', '#ff983a', '#defef1', '#3579ce', '#dceeff', '#33c371', '#fff2eb', '#87522c'][i]);
     }
@@ -149,7 +154,7 @@ window.SimulatorHub.Models = {
     for (i = 0; i < 5; i++) box(nw, (1.03 + i * .09) + ' 1.21 .01', [.035, .025, .02], '#77d8aa');
     label(nw, 'T568B COLOR ORDER', '0 2.44 -.88', 3.5, '#ffe7ab');
 
-    var p = station('programming', '5.05 0 -2.35', '0 -52 0', '#b182f3', 'PROGRAMMING', 'PYTHON / C++ / JAVA');
+    var p = station('programming', '2.35 0 0.15', '0 -76 0', '#b182f3', 'PROGRAMMING', 'PYTHON / C++ / JAVA');
     [-1.1, 0, 1.1].forEach(function (mx, idx) {
       box(p, mx + ' 1.95 -.74', [.98, .72, .10], '#09121f');
       box(p, mx + ' 1.95 -.68', [.87, .60, .012], ['#164d68', '#2b3a70', '#1a5658'][idx]);
@@ -164,105 +169,21 @@ window.SimulatorHub.Models = {
 
 
     // --------------------------------------------------------------------
-    // Atmospheric, non-interactive learning-room props (lightweight geometry)
-    // --------------------------------------------------------------------
-    // Panoramic windows on the rear arc, with visible frames, sill and skyline.
-    function windowModule(x, z, yaw) {
-      var w = entity(root, x + ' 0 ' + z, '0 ' + yaw + ' 0');
-      box(w, '0 3.15 0', [2.25, 1.75, .10], '#0b1d32');
-      box(w, '0 3.15 .07', [2.07, 1.57, .018], '#4b92b4', { material: 'color:#4b92b4; emissive:#17435a; emissiveIntensity:.12' });
-      // window reflection and distant skyline
-      box(w, '-.64 3.32 .086', [.26, 1.12, .008], '#6cb4cf');
-      box(w, '.40 2.63 .086', [.49, .40, .008], '#26465f');
-      box(w, '-.17 2.69 .086', [.48, .27, .008], '#2a506b');
-      box(w, '0 3.15 .12', [.09, 1.83, .14], '#d1e2ed');
-      box(w, '0 4.06 .12', [2.4, .10, .16], '#d1e2ed');
-      box(w, '0 2.25 .14', [2.4, .13, .25], '#b2cddd');
-      box(w, '-1.13 3.15 .11', [.10, 1.8, .15], '#d1e2ed');
-      box(w, '1.13 3.15 .11', [.10, 1.8, .15], '#d1e2ed');
+    // Compact educational props ON the desks, not outside the bounds.
+    function paper(parent,x,z,color) {
+      var g=entity(parent,x+' 1.103 '+z);
+      box(g,'0 0 0',[.65,.014,.43],'#f4f6fa');
+      box(g,'0 .009 -.12',[.50,.004,.045],color);
+      for(var k=0;k<4;k++)box(g,'0 .01 '+(-.05+k*.07),[.49,.003,.01],'#9cacc0');
     }
-    // Windows are spaced between stations; they do not obscure the teaching boards.
-    windowModule(-6.9, 2.5, 125);
-    windowModule(6.9, 2.5, -125);
-    windowModule(0, 7.8, 180);
-
-    // Printable study handouts lying on each physical table.
-    function studyPaper(station, x, z, stripeColor) {
-      var sheet = entity(station, x + ' 1.105 ' + z);
-      box(sheet, '0 0 0', [.67, .014, .47], '#f4f6f3');
-      box(sheet, '-.19 .009 -.13', [.21, .002, .022], stripeColor);
-      for (var n=0; n<4; n++) {
-        box(sheet, '.045 .009 ' + (-.10 + .075*n).toFixed(3), [.46, .002, .016], '#a1b6c5');
-      }
-      box(sheet, '-.14 .009 .16', [.27, .002, .045], '#90adc0');
+    paper(h,-.95,.28,'#24d6bd'); paper(nw,.65,.25,'#f5c44e'); paper(p,1.15,.22,'#b182f3');
+    function stationery(parent,accent) {
+      box(parent,'1.44 1.13 .43',[.43,.07,.29],'#d9e5ee');
+      box(parent,'1.44 1.17 .43',[.42,.025,.27],accent);
+      box(parent,'-1.45 1.16 .42',[.22,.20,.18],'#183647');
+      box(parent,'-1.45 1.29 .42',[.04,.24,.035],'#eef6fb');
     }
-    studyPaper(h, -1.02, .35, '#17a99b');
-    studyPaper(nw, .15, .35, '#e2a535');
-    studyPaper(p, 1.26, .35, '#9b6de0');
-
-    // Subtle whiteboard/notice panels alongside each learning station.
-    function noticePanel(station, x, color, heading, detail) {
-      box(station, x + ' 2.32 -.84', [.76, .85, .045], '#e4eaf0');
-      box(station, x + ' 2.64 -.81', [.66, .14, .012], color);
-      label(station, heading, x + ' 2.615 -.79', .58, '#091a2e');
-      label(station, detail, x + ' 2.31 -.79', .62, '#18324b');
-      for (var n=0; n<3; n++) box(station, x + ' ' + (2.12+n*.08) + ' -.806', [.52, .015, .006], '#8b9dac');
-    }
-    noticePanel(h, -1.86, '#50dfc9', 'PARTS', 'PC 101');
-    noticePanel(nw, -1.86, '#f4c44b', 'T568B', 'CABLE');
-    noticePanel(p, -1.86, '#bd91ff', 'CODE', 'HELLO');
-
-    // Wall accent lighting and information plinth to make the venue feel complete.
-    cylinder(root, '0 .16 6.5', .86, .31, '#273d53');
-    cylinder(root, '0 .34 6.5', .66, .055, '#61d4ed', {material:'color:#61d4ed; emissive:#3297ac; emissiveIntensity:.28'});
-    label(root, 'COMPUTER ENGINEERING', '0 .39 6.5', 2.1, '#12293a');
-
-    // Additional classroom props: cabinets, study references, stools and wall panels.
-    function stool(parent, x, z) {
-      var g = entity(parent, x + ' 0 ' + z);
-      cylinder(g, '0 .51 0', .35, .11, '#58748c');
-      cylinder(g, '0 .28 0', .055, .45, '#b1c7d6');
-      cylinder(g, '0 .055 0', .27, .08, '#20394e');
-    }
-    stool(h, -1.35, 1.72); stool(h, 1.35, 1.72);
-    stool(nw, -1.35, 1.72); stool(nw, 1.35, 1.72);
-    stool(p, -1.35, 1.72); stool(p, 1.35, 1.72);
-
-    function supplies(parent, color) {
-      // Small shelf on side of the station and labeled storage bins.
-      box(parent, '1.65 2.44 -.76', [.78, .07, .27], '#a7c1d2');
-      for (var i=0; i<3; i++) {
-        box(parent, (1.42 + i*.24).toFixed(2)+' 2.57 -.75', [.17, .22, .19], i===1 ? color : '#c4d3df');
-      }
-      // Tablet, pen, desk lamp and stacked notebooks.
-      box(parent, '.84 1.12 .33', [.36, .035, .24], '#18334b');
-      box(parent, '.84 1.14 .33', [.29, .006, .18], '#62bdd4');
-      for (var j=0;j<3;j++) box(parent, '1.35 '+(1.11+j*.045).toFixed(3)+' .49', [.44, .042, .34], j===1?'#f2d789':'#d7e6ef');
-      cylinder(parent, '-.08 1.15 .38', .12, .055, '#283d51');
-      cylinder(parent, '-.08 1.37 .38', .025, .43, '#c1d2dd');
-      box(parent, '-.08 1.61 .36', [.36, .12, .18], '#a3e3ee', {rotation:'20 0 0'});
-      // Identification cards neatly in front of the props.
-      box(parent, '-1.13 1.11 -.26', [.62, .018, .24], '#f1f5fa');
-      box(parent, '-1.13 1.122 -.35', [.47, .004, .026], color);
-    }
-    supplies(h, '#24d6bd'); supplies(nw, '#f5c44e'); supplies(p, '#b182f3');
-
-    function wallDisplay(x, z, yaw, title, accent) {
-      var g = entity(root, x+' 0 '+z, '0 '+yaw+' 0');
-      box(g, '0 2.95 0', [2.0, 1.20, .09], '#081e32');
-      box(g, '0 3.46 .055', [1.90, .11, .025], accent);
-      label(g, title, '0 3.12 .065', 1.72, '#edfaff');
-      for (var k=0;k<5;k++) box(g, (-.65+k*.30)+' 2.75 .065', [.22,.07,.012], k%2 ? '#77abc5':accent);
-    }
-    wallDisplay(-7.4, -1.0, 65, 'HARDWARE LAB', '#24d6bd');
-    wallDisplay(7.4, -1.0, -65, 'PROGRAMMING LAB', '#b182f3');
-    wallDisplay(0, -8.25, 0, 'NETWORK LAB', '#f5c44e');
-    // Freestanding information columns in unused gaps, away from buttons.
-    [-6.7, 6.7].forEach(function(x) {
-      cylinder(root, x+' .55 4.4', .28, 1.1, '#203a52');
-      box(root, x+' 1.25 4.4', [.56, .42, .10], '#397b9b');
-      box(root, x+' 1.54 4.4', [.65, .07, .12], '#a1e4ee');
-    });
+    stationery(h,'#24d6bd'); stationery(nw,'#f5c44e'); stationery(p,'#b182f3');
     return root;
   }
 };

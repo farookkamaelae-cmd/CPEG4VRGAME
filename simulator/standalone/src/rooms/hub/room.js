@@ -13,8 +13,8 @@ window.SimulatorRooms.hub = function createHubRoom(context) {
       if (camera) {
         oldCameraPosition = camera.getAttribute('position');
         oldCameraRotation = camera.getAttribute('rotation');
-        camera.setAttribute('position', '0 1.72 0.80');
-        camera.setAttribute('rotation', '8 0 0');
+        camera.setAttribute('position', '0 1.76 0.82');
+        camera.setAttribute('rotation', '9 0 0');
       }
       root = window.SimulatorHub.Models.create(context);
       container.append(root);

@@ -1,4 +1,4 @@
-// Hub interactions: unified floating overview panel for both Desktop and VR.
+// Hub interactions: station-anchored popup for both Desktop and VR.
 window.SimulatorHub = window.SimulatorHub || {};
 window.SimulatorHub.Interactions = {
   bind: function (root, context) {
@@ -194,7 +194,7 @@ window.SimulatorHub.Interactions = {
       var texture = buttonTexture(label, color);
       var mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(.52, .16),
-        new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, depthTest: false, transparent: false, opacity: 1 })
+        new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, depthTest: true, depthWrite: true, transparent: false, opacity: 1 })
       );
       mesh.renderOrder = 1004;
       entity.setObject3D('mesh', mesh);
@@ -204,12 +204,22 @@ window.SimulatorHub.Interactions = {
     }
     function showPanel(zone) {
       var data = lessons[zone];
-      if (!data || !camera || !window.THREE) return;
+      if (!data || !window.THREE) return;
+      var station = root.querySelector('[data-hub-station="' + zone + '"]');
+      if (!station) return;
       hidePanel();
       activeZone = zone;
       page = 0;
       panel = document.createElement('a-entity');
-      panel.setAttribute('position', '0 0.06 -1.72');
+      // Popup belongs to the selected table, not the camera; stays in place when user turns.
+      // Popup is physically anchored over the station work surface (desk height ~1 m).
+      // Smaller and lower than V12 so it behaves like a table-mounted display,
+      // never as a face-following overlay.
+      panel.setAttribute('position', '0 1.81 0.22');
+      panel.setAttribute('rotation', '-12 0 0');
+      panel.setAttribute('scale', '0.001 0.001 0.001');
+      panel.setAttribute('animation__appear',
+        'property: scale; from: 0.001 0.001 0.001; to: 0.73 0.73 0.73; dur: 280; easing: easeOutBack');
       panel.setAttribute('data-hub-panel', '');
       canvas = document.createElement('canvas');
       canvas.width = 1000; canvas.height = 1080;
@@ -219,7 +229,7 @@ window.SimulatorHub.Interactions = {
       var backEntity = document.createElement('a-entity');
       var backMesh = new THREE.Mesh(
         new THREE.PlaneGeometry(1.98, 1.90),
-        new THREE.MeshBasicMaterial({ color: '#06111b', side: THREE.DoubleSide, depthTest: false, transparent: false, opacity: 1 })
+        new THREE.MeshBasicMaterial({ color: '#06111b', side: THREE.DoubleSide, depthTest: true, depthWrite: true, transparent: false, opacity: 1 })
       );
       backMesh.renderOrder = 999;
       backEntity.setObject3D('mesh', backMesh);
@@ -228,11 +238,12 @@ window.SimulatorHub.Interactions = {
       panelBackMesh = backMesh;
       panelMesh = new THREE.Mesh(
         new THREE.PlaneGeometry(1.92, 1.84),
-        new THREE.MeshBasicMaterial({ map: panelTexture, side: THREE.DoubleSide, depthTest: false, transparent: false, opacity: 1 })
+        new THREE.MeshBasicMaterial({ map: panelTexture, side: THREE.DoubleSide, depthTest: true, depthWrite: true, transparent: false, opacity: 1 })
       );
       panelMesh.renderOrder = 1000;
       panel.setObject3D('mesh', panelMesh);
-      camera.appendChild(panel);
+      // Mount to this station only. No camera parenting or camera-tracking tick.
+      station.appendChild(panel);
       addButton('close', 'ปิดข้อมูล', -.72, '#c55468');
       addButton('prev', 'ก่อนหน้า', -.24, '#2b82ae');
       addButton('next', 'ถัดไป', .24, '#2b82ae');
@@ -265,13 +276,13 @@ window.SimulatorHub.Interactions = {
     function onKeyDown(event) { if (event.key === 'Escape' && panel) hidePanel(); }
 
     root.addEventListener('click', onClick);
-    if (camera) camera.addEventListener('click', onClick);
+    
     document.addEventListener('keydown', onKeyDown);
     applyGlowToAll(root);
 
     return function unbind() {
       root.removeEventListener('click', onClick);
-      if (camera) camera.removeEventListener('click', onClick);
+      
       document.removeEventListener('keydown', onKeyDown);
       glowCleanups.forEach(function (fn) { fn(); });
       glowCleanups = [];

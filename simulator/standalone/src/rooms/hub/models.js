@@ -116,6 +116,7 @@ window.SimulatorHub.Models = {
 
     function station(zone, pos, rot, color, title, tagline) {
       var s = entity(root, pos, rot);
+      s.setAttribute('data-hub-station', zone);
       s.setAttribute('scale', '0.68 0.77 0.68');
       cylinder(s, '0 .13 0', 2.62, .24, '#1b3149', { segmentsRadial: 6, rotation: '0 30 0' });
       box(s, '0 2.0 -1.02', [4.7, 3.1, .18], '#13243a');

@@ -28,6 +28,8 @@
     button, select { border: 1px solid #38bdf8; border-radius: .5rem; padding: .55rem .8rem; color: inherit; background: #10243a; font: inherit; cursor: pointer; }
     a-scene { position: fixed; inset: 0; width: 100%; height: 100%; }
     #status { position: fixed; z-index: 5; inset: auto 1rem 1rem; min-height: 1rem; padding: .6rem .8rem; background: #07111fe8; border-radius: .5rem; pointer-events: none; }
+    #vr-toggle { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 10001; padding: .7rem 1rem; border: 1px solid #38bdf8; border-radius: .65rem; color: #fff; background: #07111fee; box-shadow: 0 4px 18px #0008; font: 700 1rem system-ui,sans-serif; cursor: pointer; }
+    #vr-toggle:hover { background: #0c3150; }
   </style>
 </head>
 <body>
@@ -36,7 +38,8 @@
     <button id="home" data-i18n="nav.home">กลับห้องหลัก</button>
     <nav id="room-nav"></nav>
   </header>
-  <a-scene background="color: #07111f" renderer="antialias: true; colorManagement: true" cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .selectable" webxr="requiredFeatures: local-floor" vr-mode-ui="enabled: true">
+  <button id="vr-toggle" type="button" title="เข้าโหมด VR" aria-label="เข้าโหมด VR">เข้า VR</button>
+  <a-scene background="color: #07111f" renderer="antialias: true; colorManagement: true" cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .selectable" webxr="requiredFeatures: local-floor" vr-mode-ui="enabled: false">
     <a-entity id="world"></a-entity>
     <a-entity id="player-camera" camera look-controls="pointerLockEnabled: false" wasd-controls="enabled: false" position="0 1.6 5"></a-entity>
     <a-entity laser-controls="hand: left" cursor="rayOrigin: entity; fuse: false" raycaster="objects: .selectable; far: 8"></a-entity>

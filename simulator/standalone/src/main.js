@@ -109,6 +109,71 @@
     button.addEventListener('click', function () { openRoom(id); });
     roomNav.append(button);
   });
+  var vrToggle = document.getElementById('vr-toggle');
+  var vrSupported = null;
+
+  function syncVRToggle() {
+    if (!vrToggle) return;
+    vrToggle.textContent = scene.is('vr-mode') ? 'ออกจาก VR' : 'เข้า VR';
+    vrToggle.setAttribute('aria-label', vrToggle.textContent);
+    vrToggle.title = vrToggle.textContent;
+  }
+
+  function showVRError(error) {
+    var message = 'เข้าโหมด VR ไม่สำเร็จ';
+    if (error && (error.name === 'NotSupportedError' || error.name === 'NotFoundError')) {
+      message = 'ไม่พบ headset หรือ browser นี้ไม่รองรับ immersive VR';
+    } else if (error && error.name === 'NotAllowedError') {
+      message = 'การเข้า VR ถูกปฏิเสธ กรุณาอนุญาตสิทธิ์และกดปุ่มจากหน้าเว็บโดยตรง';
+    } else if (!window.isSecureContext) {
+      message = 'WebXR ต้องเปิดผ่าน HTTPS หรือ localhost';
+    }
+    status.textContent = message;
+    console.warn('WebXR entry failed:', error || message);
+  }
+
+  vrToggle.addEventListener('click', function () {
+    if (scene.is('vr-mode')) {
+      scene.exitVR();
+      return;
+    }
+    if (!scene.hasLoaded) {
+      status.textContent = 'รอให้ห้องโหลดเสร็จก่อน แล้วกดเข้า VR อีกครั้ง';
+      return;
+    }
+    if (!window.isSecureContext) {
+      showVRError();
+      return;
+    }
+    if (!navigator.xr || typeof scene.enterVR !== 'function') {
+      showVRError({ name: 'NotSupportedError' });
+      return;
+    }
+    if (vrSupported === false) {
+      showVRError({ name: 'NotSupportedError' });
+      return;
+    }
+    status.textContent = 'กำลังเชื่อมต่อ headset...';
+    try {
+      var entering = scene.enterVR();
+      if (entering && typeof entering.catch === 'function') entering.catch(showVRError);
+    } catch (error) {
+      showVRError(error);
+    }
+  });
+
+  scene.addEventListener('enter-vr', function () {
+    status.textContent = '';
+    syncVRToggle();
+  });
+  scene.addEventListener('exit-vr', syncVRToggle);
+
+  if (navigator.xr && typeof navigator.xr.isSessionSupported === 'function') {
+    navigator.xr.isSessionSupported('immersive-vr').then(function (supported) {
+      vrSupported = supported;
+      if (!supported) vrToggle.title = 'อุปกรณ์นี้ยังไม่รองรับ immersive VR';
+    }).catch(function () { vrSupported = null; });
+  }
   document.getElementById('home').addEventListener('click', home);
   updateLanguage();
   home();

@@ -213,13 +213,13 @@ window.SimulatorHub.Interactions = {
       panel = document.createElement('a-entity');
       // Popup belongs to the selected table, not the camera; stays in place when user turns.
       // Popup is physically anchored over the station work surface (desk height ~1 m).
-      // Smaller and lower than V12 so it behaves like a table-mounted display,
-      // never as a face-following overlay.
-      panel.setAttribute('position', '0 1.81 0.22');
-      panel.setAttribute('rotation', '-12 0 0');
+      // Large readable display, fixed to the selected station, not the camera.
+      // Its bottom edge stays above the desk at 1.0 m.
+      panel.setAttribute('position', '0 2.28 0.72');
+      panel.setAttribute('rotation', '-7 0 0');
       panel.setAttribute('scale', '0.001 0.001 0.001');
       panel.setAttribute('animation__appear',
-        'property: scale; from: 0.001 0.001 0.001; to: 0.73 0.73 0.73; dur: 280; easing: easeOutBack');
+        'property: scale; from: 0.001 0.001 0.001; to: 1.12 1.12 1.12; dur: 320; easing: easeOutBack');
       panel.setAttribute('data-hub-panel', '');
       canvas = document.createElement('canvas');
       canvas.width = 1000; canvas.height = 1080;

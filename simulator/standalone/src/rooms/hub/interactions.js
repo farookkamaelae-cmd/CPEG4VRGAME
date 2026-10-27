@@ -60,7 +60,7 @@ window.SimulatorHub.Interactions = {
     var buttons = [];
     var activeZone = null;
     var page = 0;
-    var itemsPerPage = 2;
+    var itemsPerPage = 4;
     var context2d = null;
     var canvas = null;
     var glowCleanups = [];
@@ -213,12 +213,13 @@ window.SimulatorHub.Interactions = {
       panel = document.createElement('a-entity');
       // Popup belongs to the selected table, not the camera; stays in place when user turns.
       // Popup is physically anchored over the station work surface (desk height ~1 m).
-      // Enlarged readable desk popup (2.05x) without camera following.
-      // Fixed 2.05x scale, raised center so lower edge sits around table height.
-      panel.setAttribute('position', '0 2.93 1.35');
+      // Enlarged readable desk popup (1.65x) without camera following.
+      // At 1.65x its lower edge is around desk level; closer toward learner.
+      panel.setAttribute('position', '0 2.62 1.10');
       panel.setAttribute('rotation', '-7 0 0');
-      panel.setAttribute('scale', '2.05 2.05 2.05');
-      // No scale animation: preserve predictable readable size across browsers and VR.
+      panel.setAttribute('scale', '0.001 0.001 0.001');
+      panel.setAttribute('animation__appear',
+        'property: scale; from: 0.001 0.001 0.001; to: 1.65 1.65 1.65; dur: 360; easing: easeOutBack');
       panel.setAttribute('data-hub-panel', '');
       canvas = document.createElement('canvas');
       canvas.width = 1000; canvas.height = 1080;

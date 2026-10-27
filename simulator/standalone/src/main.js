@@ -110,7 +110,6 @@
     roomNav.append(button);
   });
   var vrToggle = document.getElementById('vr-toggle');
-  var vrSupported = null;
 
   function syncVRToggle() {
     if (!vrToggle) return;
@@ -127,6 +126,8 @@
       message = 'การเข้า VR ถูกปฏิเสธ กรุณาอนุญาตสิทธิ์และกดปุ่มจากหน้าเว็บโดยตรง';
     } else if (!window.isSecureContext) {
       message = 'WebXR ต้องเปิดผ่าน HTTPS หรือ localhost';
+    } else if (error && error.message) {
+      message = 'เบราว์เซอร์ปฏิเสธการเข้า VR: ' + error.message;
     }
     status.textContent = message;
     console.warn('WebXR entry failed:', error || message);
@@ -149,8 +150,16 @@
       showVRError({ name: 'NotSupportedError' });
       return;
     }
-    if (vrSupported === false) {
-      showVRError({ name: 'NotSupportedError' });
+    var headsetDetected = Boolean(scene.isMobile);
+    try {
+      headsetDetected = headsetDetected || Boolean(
+        scene.checkHeadsetConnected && scene.checkHeadsetConnected()
+      );
+    } catch (error) {
+      console.warn('Headset detection failed; trying WebXR request:', error);
+    }
+    if (!headsetDetected) {
+      status.textContent = 'เบราว์เซอร์นี้ยังไม่พบ headset ที่เชื่อมต่อ หรือ runtime VR บนคอมยังไม่เริ่ม';
       return;
     }
     status.textContent = 'กำลังเชื่อมต่อ headset...';
@@ -168,12 +177,6 @@
   });
   scene.addEventListener('exit-vr', syncVRToggle);
 
-  if (navigator.xr && typeof navigator.xr.isSessionSupported === 'function') {
-    navigator.xr.isSessionSupported('immersive-vr').then(function (supported) {
-      vrSupported = supported;
-      if (!supported) vrToggle.title = 'อุปกรณ์นี้ยังไม่รองรับ immersive VR';
-    }).catch(function () { vrSupported = null; });
-  }
   document.getElementById('home').addEventListener('click', home);
   updateLanguage();
   home();

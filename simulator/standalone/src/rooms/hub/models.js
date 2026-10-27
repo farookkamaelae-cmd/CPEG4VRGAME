@@ -75,8 +75,7 @@ window.SimulatorHub.Models = {
     }
 
     var root = el('a-entity', { 'data-hub-root': '' });
-    // The common 8 x 8 x 8 m envelope is supplied by shared/room-structure.js.
-    // This module contains only Hub furniture, learning stations, and decor.
+    // The shared shell is supplied by src/main.js; keep only Hub-owned props.
     // Central arrival marker; subdued to avoid overwhelming the scene.
     cylinder(root, '0 .015 .15', .63, .028, '#27687d', {material:'color:#27687d; emissive:#146177; emissiveIntensity:.15'});
     // Ceiling lighting scaled to the room.
@@ -92,8 +91,8 @@ window.SimulatorHub.Models = {
       box(g, '0 4.7 .07', [1.23, .07, .055], '#c5dae5');
       box(g, '0 3.94 .08', [1.4, .1, .17], '#aac2d3');
     }
-    windowPanel(-3.88, 2.65, 90);
-    windowPanel(3.88, 2.65, -90);
+    windowPanel(-3.94, 2.65, 90);
+    windowPanel(3.94, 2.65, -90);
     // Rear learning posters and shelving.
     var poster = entity(root, '0 0 3.86', '0 180 0');
     box(poster, '0 4.45 0', [2.1, 1.03, .07], '#e8f0f6');

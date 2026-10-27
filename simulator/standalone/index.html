@@ -7,19 +7,19 @@
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="data/i18n.js"></script>
   <script src="shared/room-structure.js"></script>
-  <script src="shared/camera-locations.js"></script>
-  <script src="src/rooms/hub/models.js?v=16"></script>
-  <script src="src/rooms/hub/interactions.js?v=16"></script>
-  <script src="src/rooms/hub/room.js?v=16"></script>
+  <script src="shared/camera-locations.js?v=21"></script>
+  <script src="src/rooms/hub/models.js?v=17"></script>
+  <script src="src/rooms/hub/interactions.js?v=17"></script>
+  <script src="src/rooms/hub/room.js?v=17"></script>
   <script src="src/rooms/hardware/components.js"></script>
   <script src="src/rooms/hardware/assembly.js"></script>
   <script src="src/rooms/hardware/room.js"></script>
   <script src="src/rooms/programming/data.js"></script>
   <script src="src/rooms/programming/game.js"></script>
-  <script src="src/rooms/programming/room.js"></script>
+  <script src="src/rooms/programming/room.js?v=18"></script>
   <script src="src/rooms/network/data.js"></script>
   <script src="src/rooms/network/game.js"></script>
-  <script src="src/rooms/network/room.js"></script>
+  <script src="src/rooms/network/room.js?v=19"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #07111f; color: #fff; font-family: system-ui, sans-serif; }
@@ -36,11 +36,11 @@
     <button id="home" data-i18n="nav.home">กลับห้องหลัก</button>
     <nav id="room-nav"></nav>
   </header>
-  <a-scene background="color: #07111f" renderer="antialias: true; colorManagement: true" cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .selectable" webxr="requiredFeatures: local-floor">
+  <a-scene background="color: #07111f" renderer="antialias: true; colorManagement: true" cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .selectable" webxr="requiredFeatures: local-floor" vr-mode-ui="enabled: true">
     <a-entity id="world"></a-entity>
     <a-entity id="player-camera" camera look-controls="pointerLockEnabled: false" wasd-controls="enabled: false" position="0 1.6 5"></a-entity>
-    <a-entity laser-controls="hand: left" raycaster="objects: .selectable; far: 8"></a-entity>
-    <a-entity laser-controls="hand: right" raycaster="objects: .selectable; far: 8"></a-entity>
+    <a-entity laser-controls="hand: left" cursor="rayOrigin: entity; fuse: false" raycaster="objects: .selectable; far: 8"></a-entity>
+    <a-entity laser-controls="hand: right" cursor="rayOrigin: entity; fuse: false" raycaster="objects: .selectable; far: 8"></a-entity>
     <a-entity light="type: ambient; intensity: 1.1"></a-entity>
     <a-entity light="type: directional; intensity: 1.2" position="-2 6 4"></a-entity>
   </a-scene>

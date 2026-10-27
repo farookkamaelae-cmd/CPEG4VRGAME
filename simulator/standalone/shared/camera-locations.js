@@ -3,25 +3,25 @@
 // Coordinates are world coordinates; the camera looks toward negative Z when rotation is 0, 0, 0.
 window.SimulatorCameraLocations = {
   defaults: {
-    position: { x: 0, y: 1.6, z: 3.2 },
+    position: { x: 0, y: 1.6, z: 5 },
     rotation: { x: 0, y: 0, z: 0 }
   },
   rooms: {
     hub: {
-      position: { x: 0, y: 1.6, z: 3.2 },
+      position: { x: 0, y: 1.65, z: 0.15 },
       rotation: { x: 0, y: 0, z: 0 }
     },
     hardware: {
-      position: { x: 0, y: 1.6, z: 3.2 },
-      rotation: { x: 0, y: 0, z: 0 }
+      position: { x: 0, y: 1.65, z: 1.9 },
+      rotation: { x: -7, y: 0, z: 0 }
     },
     programming: {
-      position: { x: 0, y: 1.6, z: 3.2 },
-      rotation: { x: 0, y: 0, z: 0 }
+      position: { x: 0, y: 1.6, z: 0.9 },
+      rotation: { x: 2, y: 0, z: 0 }
     },
     network: {
-      position: { x: 0, y: 1.6, z: 3.2 },
-      rotation: { x: 0, y: 0, z: 0 }
+      position: { x: 0, y: 1.65, z: 0.7 },
+      rotation: { x: -18, y: 0, z: 0 }
     }
   },
   apply: function (roomId, cameraElement) {
@@ -31,4 +31,3 @@ window.SimulatorCameraLocations = {
     cameraElement.setAttribute('rotation', location.rotation);
   }
 };
-

@@ -1,0 +1,42 @@
+{
+  "th": {
+    "app.title": "Computer Engineering Simulator",
+    "app.language": "ภาษา",
+    "nav.home": "กลับหน้าหลัก",
+    "nav.hardware": "ฮาร์ดแวร์",
+    "nav.programming": "โปรแกรมมิ่ง",
+    "nav.network": "เครือข่าย",
+    "hub.title": "ศูนย์การเรียนรู้วิศวกรรมคอมพิวเตอร์",
+    "hub.instructions": "เลือกประตูหรือสถานีบนโต๊ะเพื่อเข้าห้องเรียนรู้",
+    "hub.hardware": "ห้องฮาร์ดแวร์",
+    "hub.programming": "ห้องเขียนโปรแกรม",
+    "hub.network": "ห้องเครือข่าย",
+    "hub.comingSoon": "กำลังพัฒนา",
+    "hardware.title": "ห้องฮาร์ดแวร์",
+    "hardware.description": "เรียนรู้ส่วนประกอบหลักของคอมพิวเตอร์",
+    "hardware.select": "เลือกชิ้นส่วนเพื่อดูชื่อ",
+    "hardware.cpu": "หน่วยประมวลผลกลาง (CPU)",
+    "hardware.ram": "หน่วยความจำ (RAM)",
+    "hardware.storage": "อุปกรณ์จัดเก็บข้อมูล"
+  },
+  "en": {
+    "app.title": "Computer Engineering Simulator",
+    "app.language": "Language",
+    "nav.home": "Main Hub",
+    "nav.hardware": "Hardware",
+    "nav.programming": "Programming",
+    "nav.network": "Networking",
+    "hub.title": "Computer Engineering Learning Hub",
+    "hub.instructions": "Choose a doorway or desk station to enter a learning room.",
+    "hub.hardware": "Hardware Room",
+    "hub.programming": "Programming Room",
+    "hub.network": "Networking Room",
+    "hub.comingSoon": "Coming soon",
+    "hardware.title": "Hardware Room",
+    "hardware.description": "Learn about core computer components.",
+    "hardware.select": "Select a component to see its name.",
+    "hardware.cpu": "Central Processing Unit (CPU)",
+    "hardware.ram": "Memory (RAM)",
+    "hardware.storage": "Storage device"
+  }
+}

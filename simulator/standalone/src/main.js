@@ -5,6 +5,13 @@
   var status = document.getElementById('status');
   var roomNav = document.getElementById('room-nav');
   var camera = document.getElementById('player-camera');
+  var toolbar = document.getElementById('toolbar');
+  var vrToggle = document.getElementById('vr-toggle');
+  var vrRoomNav = null;
+  var vrRoomNavCanvas = null;
+  var vrRoomNavTexture = null;
+  var vrRoomNavGeometry = null;
+  var vrRoomNavMaterial = null;
   var currentLanguage = 'th';
   var activeRoom = null;
   var activeRoomId = null;
@@ -22,6 +29,107 @@
     roomNav.querySelectorAll('[data-room]').forEach(function (item) { item.textContent = t(definitions[item.dataset.room].key); });
     scene.dispatchEvent(new CustomEvent('sim:language-changed', { detail: { language: currentLanguage } }));
   }
+  function createVRRoomNav() {
+    if (!camera || !window.AFRAME || !window.AFRAME.THREE) return;
+    vrRoomNav = document.createElement('a-entity');
+    vrRoomNav.id = 'vr-room-navigation';
+    vrRoomNav.setAttribute('position', '0 0.78 -1.08');
+    vrRoomNav.setAttribute('visible', 'false');
+    camera.appendChild(vrRoomNav);
+
+    vrRoomNavCanvas = document.createElement('canvas');
+    vrRoomNavCanvas.width = 1440;
+    vrRoomNavCanvas.height = 220;
+    var THREE = window.AFRAME.THREE;
+    vrRoomNavTexture = new THREE.CanvasTexture(vrRoomNavCanvas);
+    vrRoomNavGeometry = new THREE.PlaneGeometry(3.6, 0.55);
+    vrRoomNavMaterial = new THREE.MeshBasicMaterial({
+      map: vrRoomNavTexture,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false
+    });
+    var panelMesh = new THREE.Mesh(vrRoomNavGeometry, vrRoomNavMaterial);
+    panelMesh.renderOrder = 2000;
+    vrRoomNav.object3D.add(panelMesh);
+
+    vrRoomNav.addEventListener('click', function (event) {
+      var button = event.target && event.target.closest
+        ? event.target.closest('[data-vr-room-action]')
+        : null;
+      if (!button || !vrRoomNav.contains(button)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (button.dataset.vrRoomAction === 'home') home();
+      else if (button.dataset.vrRoomAction === 'room') openRoom(button.dataset.roomId);
+      else if (button.dataset.vrRoomAction === 'exit') scene.exitVR();
+    });
+
+    scene.addEventListener('enter-vr', syncVRRoomNav);
+    scene.addEventListener('exit-vr', syncVRRoomNav);
+    renderVRRoomNav();
+    syncVRRoomNav();
+  }
+
+  function renderVRRoomNav() {
+    if (!vrRoomNav || !vrRoomNavCanvas || !vrRoomNavTexture) return;
+    var ctx = vrRoomNavCanvas.getContext('2d');
+    var width = vrRoomNavCanvas.width;
+    var height = vrRoomNavCanvas.height;
+    var panelWidth = 3.6;
+    var panelHeight = 0.55;
+    var items = [];
+
+    if (activeRoomId) items.push({ label: 'กลับห้องหลัก', action: 'home', color: '#0e7490' });
+    Object.keys(definitions).forEach(function (id) {
+      items.push({ label: t(definitions[id].key), action: 'room', roomId: id, color: definitions[id].color });
+    });
+    items.push({ label: 'ออกจาก VR', action: 'exit', color: '#475569' });
+
+    vrRoomNav.querySelectorAll('[data-vr-room-action]').forEach(function (node) { node.remove(); });
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = 'rgba(7,17,31,0.96)';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 5;
+    ctx.strokeRect(3, 3, width - 6, height - 6);
+
+    var cellWidth = width / items.length;
+    items.forEach(function (item, index) {
+      var left = index * cellWidth;
+      ctx.fillStyle = item.color;
+      ctx.fillRect(left + 8, 12, cellWidth - 16, height - 24);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '600 31px Tahoma, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(item.label, left + cellWidth / 2, height / 2, cellWidth - 28);
+      if (index > 0) {
+        ctx.fillStyle = 'rgba(125,211,252,0.55)';
+        ctx.fillRect(left, 24, 2, height - 48);
+      }
+
+      var hit = document.createElement('a-plane');
+      hit.classList.add('selectable');
+      hit.dataset.vrRoomAction = item.action;
+      if (item.roomId) hit.dataset.roomId = item.roomId;
+      hit.setAttribute('position',
+        (((left + cellWidth / 2) / width - 0.5) * panelWidth) + ' 0 0.012');
+      hit.setAttribute('width', ((cellWidth - 16) / width * panelWidth).toFixed(4));
+      hit.setAttribute('height', '0.45');
+      hit.setAttribute('material', 'shader: flat; color: #ffffff; transparent: true; opacity: 0.001; side: double');
+      vrRoomNav.appendChild(hit);
+    });
+    vrRoomNavTexture.needsUpdate = true;
+  }
+
+  function syncVRRoomNav() {
+    var inVR = Boolean(scene && scene.is && scene.is('vr-mode'));
+    if (vrRoomNav) vrRoomNav.setAttribute('visible', inVR ? 'true' : 'false');
+    if (toolbar) toolbar.hidden = inVR;
+    if (vrToggle) vrToggle.hidden = inVR;
+  }
+
   function contextFor(roomId) {
     return Object.freeze({
       roomId: roomId,
@@ -87,6 +195,7 @@
     activeRoom = window.SimulatorRooms.hub(contextFor('hub'));
     activeRoom.mount(world);
     document.getElementById('home').hidden = true;
+    renderVRRoomNav();
   }
   function openRoom(roomId) {
     var definition = definitions[roomId];
@@ -101,6 +210,7 @@
     activeRoom.mount(world);
     addInWorldHomeButton();
     document.getElementById('home').hidden = false;
+    renderVRRoomNav();
   }
   Object.keys(definitions).forEach(function (id) {
     var button = document.createElement('button');
@@ -109,7 +219,7 @@
     button.addEventListener('click', function () { openRoom(id); });
     roomNav.append(button);
   });
-  var vrToggle = document.getElementById('vr-toggle');
+  createVRRoomNav();
 
   function syncVRToggle() {
     if (!vrToggle) return;

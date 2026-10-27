@@ -8,6 +8,7 @@ This is the team's agreed integration contract for `simulator/standalone/`. It i
 - Internet access is needed to load A-Frame 1.6.0 from its CDN.
 - WebXR/VR needs a supported headset/browser and a secure context (normally HTTPS or localhost). A double-click `file://` launch is for desktop preview and may not allow WebXR.
 - Desktop mouse and VR controller laser input activate the same A-Frame `click` event. Controllers point at entities with `.selectable` and use the trigger to click them.
+- The shared shell also shows a camera-attached room navigation bar during VR. It provides links to Hardware, Programming, Network, the Main Hub, and VR exit; room teams should not create separate copies of this global menu.
 
 ## Ownership and room files
 

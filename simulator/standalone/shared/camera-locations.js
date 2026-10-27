@@ -12,8 +12,8 @@ window.SimulatorCameraLocations = {
       rotation: { x: 0, y: 0, z: 0 }
     },
     hardware: {
-      position: { x: 0, y: 1.6, z: 3.2 },
-      rotation: { x: 0, y: 0, z: 0 }
+      position: { x: 0, y: 2.1, z: 3.8 },
+      rotation: { x: -12, y: 0, z: 0 }
     },
     programming: {
       position: { x: 0, y: 1.6, z: 3.2 },

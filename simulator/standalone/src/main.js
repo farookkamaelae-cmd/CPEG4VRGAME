@@ -4,6 +4,7 @@
   var world = document.getElementById('world');
   var status = document.getElementById('status');
   var roomNav = document.getElementById('room-nav');
+  var camera = document.getElementById('player-camera');
   var currentLanguage = 'th';
   var activeRoom = null;
   var activeRoomId = null;
@@ -81,6 +82,8 @@
     activeRoomId = null;
     world.replaceChildren();
     status.textContent = '';
+    window.SimulatorCameraLocations.apply('hub', camera);
+    world.append(window.SimulatorRoomStructure.create('hub'));
     activeRoom = window.SimulatorRooms.hub(contextFor('hub'));
     activeRoom.mount(world);
     document.getElementById('home').hidden = true;
@@ -92,6 +95,8 @@
     activeRoom = null;
     activeRoomId = roomId;
     world.replaceChildren();
+    window.SimulatorCameraLocations.apply(roomId, camera);
+    world.append(window.SimulatorRoomStructure.create(roomId));
     activeRoom = definition.factory(contextFor(roomId));
     activeRoom.mount(world);
     addInWorldHomeButton();

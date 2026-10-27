@@ -15,6 +15,8 @@ This is the team's agreed integration contract for `simulator/standalone/`. It i
 index.html                         Shared page, one A-Frame scene, shared input, script order
  data/i18n.js                      Thai UI text data; edit text here, not in shell logic
  src/main.js                       Navigation, room registry, shared API/session
+ shared/room-structure.js          Shared 8 m x 8 m floor plan and 8 m wall height
+ shared/camera-locations.js        Shared camera position and rotation per room
  src/rooms/hub/                    Main Hub lifecycle, models, and interactions
  src/rooms/<room-id>/room.js       Required room factory and mount/unmount lifecycle
  src/rooms/<room-id>/              Room-owned optional data, game, models, interactions, styles
@@ -24,6 +26,8 @@ index.html                         Shared page, one A-Frame scene, shared input,
 Every room uses the same required entry file, `room.js`. A team may add as many supporting files as needed (for example `data.js`, `game.js`, `models.js`, `interactions.js`, or `room.css`). Keep each room's code and assets under its own folder. Supporting JavaScript files must be included in `index.html` before that room's `room.js`; all room registrations and shared API changes are coordinated by the integration owner in `src/main.js`.
 
 The Main Hub is the shared `hub` module under `src/rooms/hub/`, and follows the same `mount(container)` / `unmount()` lifecycle. Its model code is in `models.js`, click/navigation handling is in `interactions.js`, and lifecycle wiring is in `room.js`. The shell in `src/main.js` still owns the room registry and shared services. Learning rooms are `hardware`, `programming`, and `network`.
+
+Before mounting a room, `src/main.js` adds the shared room shell from `shared/room-structure.js` to `#world` and applies the camera coordinates from `shared/camera-locations.js`. The interior is 8 m wide, 8 m deep, and 8 m high; its floor is at y=0 and usable x/z coordinates run from -4 m to +4 m. Room modules should build only their room-specific objects and must not add another floor, ceiling, or enclosing walls. Edit the camera file to adjust a room's starting view; room modules must not override the shared camera position.
 
 ## Room registration and lifecycle
 

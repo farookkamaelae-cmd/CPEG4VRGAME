@@ -1,14 +1,15 @@
 // Room contract: register a factory in the shared global room registry.
 window.SimulatorRooms = window.SimulatorRooms || {};
 window.SimulatorRooms.hardware = function createHardwareRoom(context) {
-  var panel; var container; var assembly; var mounted = false; var handleClick;
+  var panel; var roomRoot; var assembly; var mounted = false; var handleClick;
   var components = window.HardwareRoom.Components;
   var helper = window.HardwareRoom.Assembly;
   function el(tag, attrs) { return components.make(tag, attrs); }
   function refreshText() { if (mounted) panel.querySelectorAll('[data-key]').forEach(function (node) { node.setAttribute('value', context.i18n.t(node.dataset.key)); }); }
   return {
     mount: function (container) {
-      var sceneRoot = el('a-entity', { position: '0 1.3 -3' });
+      var sceneRoot = el('a-entity', { position: '0 1.3 -2.6' });
+      roomRoot = sceneRoot;
       panel = el('a-entity', {});
       var title = el('a-text', { position: '-1.5 1.4 0', width: '3', align: 'center', color: '#67e8f9' });
       title.dataset.key = 'hardware.title';
@@ -60,9 +61,9 @@ window.SimulatorRooms.hardware = function createHardwareRoom(context) {
     unmount: function () {
       if (!mounted) return;
       context.scene.removeEventListener('click', handleClick);
-      if (container) container.replaceChildren();
+      if (roomRoot) roomRoot.remove();
       context.ui.clearMessage();
-      mounted = false; assembly = null; panel = null;
+      mounted = false; assembly = null; panel = null; roomRoot = null;
     }
   };
 };

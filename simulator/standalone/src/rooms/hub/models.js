@@ -75,14 +75,8 @@ window.SimulatorHub.Models = {
     }
 
     var root = el('a-entity', { 'data-hub-root': '' });
-    // Shared-team room envelope: exact 8 x 8 footprint, height 8.
-    // Safe interior usable bounds: x/z +/-3.9; ceiling at y=8.
-    box(root, '0 -.09 0', [8, .18, 8], '#31465d');
-    box(root, '0 8.03 0', [8, .10, 8], '#102239');
-    box(root, '0 4 -4', [8, 8, .13], '#1b334b');
-    box(root, '-4 4 0', [.13, 8, 8], '#28445f');
-    box(root, '4 4 0', [.13, 8, 8], '#28445f');
-    box(root, '0 4 4', [8, 8, .13], '#243f58');
+    // The common 8 x 8 x 8 m envelope is supplied by shared/room-structure.js.
+    // This module contains only Hub furniture, learning stations, and decor.
     // Central arrival marker; subdued to avoid overwhelming the scene.
     cylinder(root, '0 .015 .15', .63, .028, '#27687d', {material:'color:#27687d; emissive:#146177; emissiveIntensity:.15'});
     // Ceiling lighting scaled to the room.

@@ -34,7 +34,7 @@ window.SimulatorRooms.network = function createNetworkRoom(context) {
   }
   return {
     mount: function (container) {
-      root = el('a-entity', { position: '0 0 -2' });
+      root = el('a-entity', { position: '0 0 -1.4' });
       root.append(text(context.i18n.t('network.title'), '-2 3 0', 4, '#67e8f9'));
       root.append(text(context.i18n.t('network.description'), '-2 2.6 0', 4, '#e2e8f0'));
       root.append(text(context.i18n.t('network.instruction'), '-2 2.15 0', 4, '#bae6fd'));
@@ -46,15 +46,15 @@ window.SimulatorRooms.network = function createNetworkRoom(context) {
         root.append(text(String(i + 1), (x - .06) + ' .48 .1', .2, '#fff'));
       }
       colors.forEach(function (wire, index) {
-        var x = -1.75 + (index % 4) * 1.15; var y = -.15 - Math.floor(index / 4) * .62;
-        var sample = el('a-cylinder', { class: 'selectable', position: x + ' ' + y + ' .1', radius: '.14', height: '.13', rotation: '90 0 0', color: wire.hex }); sample.dataset.color = wire.id;
+        var x = -1.75 + (index % 4) * 1.15; var y = .65 - Math.floor(index / 4) * .4;
+        var sample = el('a-cylinder', { class: 'selectable', position: x + ' ' + y + ' .65', radius: '.14', height: '.13', rotation: '90 0 0', color: wire.hex }); sample.dataset.color = wire.id;
         if (wire.stripe) sample.append(el('a-box', { position: '0 0 .08', width: '.22', height: '.03', depth: '.025', color: wire.stripe }));
         root.append(sample);
-        root.append(text(wire.label, (x - .42) + ' ' + (y - .32) + ' .1', .9, '#e2e8f0'));
+        root.append(text(wire.label, (x - .42) + ' ' + (y + .18) + ' .65', .9, '#e2e8f0'));
       });
-      var checkButton = el('a-box', { class: 'selectable', position: '1.35 -1.45 .1', width: '1.45', height: '.42', depth: '.12', color: '#16a34a' }); checkButton.dataset.action = 'check'; root.append(checkButton); root.append(text(context.i18n.t('network.check'), '.88 -1.52 .18', 1, '#fff'));
-      var resetButton = el('a-box', { class: 'selectable', position: '2.9 -1.45 .1', width: '1.2', height: '.42', depth: '.12', color: '#475569' }); resetButton.dataset.action = 'reset'; root.append(resetButton); root.append(text(context.i18n.t('network.reset'), '2.5 -1.52 .18', .9, '#fff'));
-      status = text(context.i18n.t('network.instruction'), '-2 -2.05 0', 4, '#67e8f9'); root.append(status);
+      var checkButton = el('a-box', { class: 'selectable', position: '2.85 1.7 .1', width: '1.35', height: '.42', depth: '.12', color: '#16a34a' }); checkButton.dataset.action = 'check'; root.append(checkButton); root.append(text(context.i18n.t('network.check'), '2.39 1.63 .18', .95, '#fff'));
+      var resetButton = el('a-box', { class: 'selectable', position: '2.85 .95 .1', width: '1.25', height: '.42', depth: '.12', color: '#475569' }); resetButton.dataset.action = 'reset'; root.append(resetButton); root.append(text(context.i18n.t('network.reset'), '2.43 .88 .18', .85, '#fff'));
+      status = text(context.i18n.t('network.instruction'), '-2 .38 0', 4, '#67e8f9'); root.append(status);
       container.append(root);
       onClick = function (event) {
         var sample = event.target.closest('[data-color]'); var action = event.target.closest('[data-action]');

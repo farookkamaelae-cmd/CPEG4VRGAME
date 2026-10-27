@@ -63,7 +63,7 @@ window.SimulatorRooms.programming = function createProgrammingRoom(context) {
 
   return {
     mount: function (container) {
-      root = el('a-entity', { position: '0 0 -2' });
+      root = el('a-entity', { position: '0 0 -1.5' });
       root.append(text(context.i18n.t('programming.title'), '-2 3 0', 4, '#c4b5fd'));
       root.append(text(context.i18n.t('programming.description'), '-2 2.6 0', 4, '#e2e8f0'));
       var grid = el('a-entity', { position: '0 0 0' });
@@ -74,15 +74,15 @@ window.SimulatorRooms.programming = function createProgrammingRoom(context) {
       var target = el('a-sphere', { position: goal.x + ' .28 ' + goal.z, radius: '.28', color: '#22c55e', animation: 'property: scale; dir: alternate; to: 1.18 1.18 1.18; loop: true; dur: 700' });
       grid.append(target); root.append(grid);
       drawRobot();
-      message = text(context.i18n.t('programming.description'), '-2 -.25 0', 4, '#67e8f9'); root.append(message);
-      board = text('—', '2 1.5 0', 2.4, '#fff'); board.setAttribute('align', 'left'); root.append(board);
+      message = text(context.i18n.t('programming.description'), '-2 .42 0', 4, '#67e8f9'); root.append(message);
+      board = text('—', '2 2.55 0', 2.4, '#fff'); board.setAttribute('align', 'left'); root.append(board);
       data.commands.map(function (command) { return [command, context.i18n.t('programming.' + command), command === 'forward' ? '#0ea5e9' : '#8b5cf6']; }).forEach(function (row, i) {
-        var button = el('a-box', { class: 'selectable', position: '2 ' + (.5 - i * .65) + ' .1', width: '1.6', height: '.42', depth: '.12', color: row[2] });
+        var button = el('a-box', { class: 'selectable', position: '2 ' + (1.8 - i * .55) + ' .1', width: '1.6', height: '.42', depth: '.12', color: row[2] });
         button.dataset.command = row[0]; root.append(button);
-        root.append(text(row[1], '1.35 ' + (.46 - i * .65) + ' .18', 1.3, '#fff'));
+        root.append(text(row[1], '1.35 ' + (1.76 - i * .55) + ' .18', 1.3, '#fff'));
       });
-      var runButton = el('a-box', { class: 'selectable', position: '1.5 -1.7 .1', width: '1.3', height: '.45', depth: '.12', color: '#16a34a' }); runButton.dataset.action = 'run'; root.append(runButton); root.append(text(context.i18n.t('programming.run'), '1.03 -1.77 .18', 1, '#fff'));
-      var resetButton = el('a-box', { class: 'selectable', position: '2.9 -1.7 .1', width: '1.15', height: '.45', depth: '.12', color: '#475569' }); resetButton.dataset.action = 'reset'; root.append(resetButton); root.append(text(context.i18n.t('programming.reset'), '2.49 -1.77 .18', .9, '#fff'));
+      var runButton = el('a-box', { class: 'selectable', position: '1.35 .24 .1', width: '1.15', height: '.42', depth: '.12', color: '#16a34a' }); runButton.dataset.action = 'run'; root.append(runButton); root.append(text(context.i18n.t('programming.run'), '.96 .17 .18', .8, '#fff'));
+      var resetButton = el('a-box', { class: 'selectable', position: '2.65 .24 .1', width: '1.1', height: '.42', depth: '.12', color: '#475569' }); resetButton.dataset.action = 'reset'; root.append(resetButton); root.append(text(context.i18n.t('programming.reset'), '2.29 .17 .18', .75, '#fff'));
       container.append(root);
       onClick = function (event) {
         var command = event.target.closest('[data-command]'); var action = event.target.closest('[data-action]');

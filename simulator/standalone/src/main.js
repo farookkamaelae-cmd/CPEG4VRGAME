@@ -83,6 +83,7 @@
     world.replaceChildren();
     status.textContent = '';
     window.SimulatorCameraLocations.apply('hub', camera);
+    world.append(window.SimulatorRoomStructure.create('hub'));
     activeRoom = window.SimulatorRooms.hub(contextFor('hub'));
     activeRoom.mount(world);
     document.getElementById('home').hidden = true;
@@ -95,6 +96,7 @@
     activeRoomId = roomId;
     world.replaceChildren();
     window.SimulatorCameraLocations.apply(roomId, camera);
+    world.append(window.SimulatorRoomStructure.create(roomId));
     activeRoom = definition.factory(contextFor(roomId));
     activeRoom.mount(world);
     addInWorldHomeButton();
@@ -111,4 +113,5 @@
   updateLanguage();
   home();
 })();
+
 

@@ -1,5 +1,6 @@
 // HUB / 3D MODELS
-// Edit the Main Hub's room shell, furniture, computer setup, shelves, and room portals here.
+// Edit Hub furniture, computer setup, decorations, and room portals here.
+// The floor, walls, ceiling, and common room scale come from shared/room-structure.js.
 window.SimulatorHub = window.SimulatorHub || {};
 window.SimulatorHub.Models = {
   create: function (context) {
@@ -23,50 +24,47 @@ window.SimulatorHub.Models = {
     }
 
     var room = node('a-entity', { 'data-hub-root': '' });
-    box(room, '0 -.12 -1', [16, .2, 16], '#263445');
-    box(room, '0 3.1 -6.5', [16, 6.2, .18], '#172033');
-    box(room, '-7.85 2.2 -1', [.18, 4.6, 11], '#1b2940');
-    box(room, '7.85 2.2 -1', [.18, 4.6, 11], '#1b2940');
-    box(room, '0 .18 -6.37', [14, .04, .04], '#22d3ee');
-    text(room, context.i18n.t('hub.title'), '-3 4.2 -6.2', 6, '#e0f2fe');
-    text(room, context.i18n.t('hub.instructions'), '-3 3.75 -6.2', 6, '#7dd3fc');
+    text(room, context.i18n.t('hub.title'), '-2.5 6.5 -3.9', 5, '#e0f2fe');
+    text(room, context.i18n.t('hub.instructions'), '-2.5 6.08 -3.9', 5, '#7dd3fc');
 
-    // Desk, monitor, keyboard, computer tower, chair, and shelf.
-    box(room, '0 1.5 -1.8', [5.5, .18, 2.3], '#17212f');
-    [-2.1, 2.1].forEach(function (x) {
-      var leg = box(room, x + ' .78 -1.8', [.12, 1.45, .12], '#111827');
-      leg.setAttribute('rotation', '0 0 ' + (x < 0 ? -10 : 10));
-      var cross = box(room, x + ' .76 -1.8', [.11, 1.8, .11], '#0f172a');
-      cross.setAttribute('rotation', '0 0 ' + (x < 0 ? 52 : -52));
-    });
-    box(room, '0 2.55 -2.35', [2.15, 1.25, .12], '#080d17');
-    box(room, '0 2.55 -2.27', [1.95, 1.04, .025], '#0b4960');
-    text(room, 'CPE / SYSTEM LAB', '-.8 2.55 -2.23', 1.6, '#a5f3fc');
-    box(room, '0 1.64 -.85', [1.48, .055, .48], '#0b1220');
-    for (var r = 0; r < 3; r++) for (var c = 0; c < 10; c++) {
-      box(room, (-.62 + c * .137) + ' 1.677 ' + (-.99 + r * .13), [.095, .018, .07], (r + c) % 4 ? '#334155' : '#22d3ee');
-    }
-    box(room, '1.95 .62 -1.85', [.72, 1.18, .72], '#101827');
-    box(room, '1.95 .62 -1.45', [.5, 1, .025], '#164e63');
-    box(room, '0 .9 1.05', [.85, .18, .78], '#111827');
-    box(room, '0 1.52 1.4', [.9, 1.05, .2], '#1e293b');
-    box(room, '-5.25 3.05 -5.85', [2.45, .09, .58], '#334155');
-    for (var i = 0; i < 5; i++) {
-      box(room, (-6.1 + i * .28) + ' 3.38 -5.82', [.18, .5 + (i % 2) * .12, .25], ['#8b5cf6', '#0ea5e9', '#f97316', '#10b981', '#ec4899'][i]);
-    }
-
+    // Three room portals fit along the rear wall inside the shared 8 m x 8 m shell.
     roomDefinitions.forEach(function (definition, index) {
-      var roomId = definition.id;
-      var x = (index - 1) * 3.2;
-      var portal = node('a-entity', { position: x + ' 0 -5' });
-      var frame = box(portal, '0 1.2 0', [1.55, 2.4, .12], '#0b1222');
-      frame.dataset.room = roomId;
-      var face = box(portal, '0 1.2 .08', [1.62, 2.48, .035], definition.color, 'selectable');
-      face.dataset.room = roomId;
-      text(portal, context.i18n.t(definition.hubKey), '-.67 1.3 .12', 1.35, '#fff');
-      text(portal, 'เข้า', '-.25 .8 .12', .5, definition.color);
+      var x = (index - 1) * 2.35;
+      var portal = node('a-entity', { position: x + ' 0 -3.78' });
+      var frame = box(portal, '0 3.8 0', [1.4, 2.45, .13], '#0b1222');
+      frame.dataset.room = definition.id;
+      var face = box(portal, '0 3.8 .075', [1.46, 2.5, .035], definition.color, 'selectable');
+      face.dataset.room = definition.id;
+      text(portal, context.i18n.t(definition.hubKey), '-.62 4.05 .11', 1.24, '#fff');
+      text(portal, 'เข้า', '-.2 3.05 .11', .4, '#fff');
       room.append(portal);
     });
+
+    // Desk and computer workstation.
+    box(room, '0 1.22 -.8', [3.8, .16, 1.5], '#17212f');
+    [-1.48, 1.48].forEach(function (x) {
+      box(room, x + ' .61 -.8', [.12, 1.12, .12], '#111827');
+      var brace = box(room, x + ' .58 -.8', [.1, 1.35, .1], '#0f172a');
+      brace.setAttribute('rotation', '0 0 ' + (x < 0 ? 45 : -45));
+    });
+    box(room, '0 1.92 -1.35', [1.72, 1.02, .12], '#080d17');
+    box(room, '0 1.92 -1.27', [1.54, .82, .025], '#0b4960');
+    text(room, 'CPE / SYSTEM LAB', '-.67 1.91 -1.23', 1.34, '#a5f3fc');
+    box(room, '0 1.33 -.34', [1.25, .045, .42], '#0b1220');
+    for (var row = 0; row < 3; row++) for (var col = 0; col < 9; col++) {
+      box(room, (-.52 + col * .13) + ' 1.36 ' + (-.47 + row * .11), [.085, .016, .065], (row + col) % 4 ? '#334155' : '#22d3ee');
+    }
+    box(room, '1.62 .58 -.86', [.58, 1.1, .62], '#101827');
+    box(room, '1.62 .58 -.52', [.4, .9, .025], '#164e63');
+
+    // Chair and a compact wall shelf.
+    box(room, '-2 .55 .45', [.78, .16, .72], '#111827');
+    box(room, '-2 1.15 .75', [.82, 1.05, .16], '#1e293b');
+    box(room, '-3.02 2.75 -3.35', [1.45, .09, .48], '#334155');
+    for (var item = 0; item < 4; item++) {
+      box(room, (-3.52 + item * .3) + ' 3.08 -3.34', [.18, .48 + (item % 2) * .1, .23], ['#8b5cf6', '#0ea5e9', '#f97316', '#10b981'][item]);
+    }
+
     return room;
   }
 };

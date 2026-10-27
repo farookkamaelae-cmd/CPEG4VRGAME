@@ -375,11 +375,8 @@
     // ==================================================
 
     function buildEnvironment() {
-      box(root, [0, -0.12, 0], [12, 0.2, 12], COLORS.floor);
-      box(root, [0, 2.5, -6], [12, 5, 0.16], COLORS.back);
-      box(root, [-6, 2.5, 0], [0.16, 5, 12], COLORS.wall);
-      box(root, [6, 2.5, 0], [0.16, 5, 12], COLORS.wall);
-      box(root, [0, 5, 0], [12, 0.12, 12], COLORS.ceiling);
+      // The shared 8 x 8 x 8 room shell is mounted by the main simulator.
+      // Keep only room-specific trim and lighting here.
 
       const lights = [
         COLORS.cyan,
@@ -390,30 +387,30 @@
       ];
 
       lights.forEach(function (color, index) {
-        const x = -4.5 + index * 2.25;
+        const x = -3.2 + index * 1.6;
 
         box(
           root,
-          [x, 4.84, -0.3],
+          [x, 7.72, -0.3],
           [1.25, 0.055, 0.18],
           color
         );
 
-        addLight(root, [x, 4.15, -1], color, 1.25);
+        addLight(root, [x, 7.1, -1], color, 1.25);
       });
 
       box(
         root,
-        [0, 3.68, -5.84],
+        [0, 6.8, -3.9],
         [4, 0.07, 0.08],
         COLORS.cyan
       );
 
       const floorLines = [
-        [[-5.55, 0.025, -5.55], [5.55, 0.025, -5.55]],
-        [[5.55, 0.025, -5.55], [5.55, 0.025, 5.55]],
-        [[-5.55, 0.025, 5.55], [5.55, 0.025, 5.55]],
-        [[-5.55, 0.025, -5.55], [-5.55, 0.025, 5.55]]
+        [[-3.7, 0.025, -3.7], [3.7, 0.025, -3.7]],
+        [[3.7, 0.025, -3.7], [3.7, 0.025, 3.7]],
+        [[-3.7, 0.025, 3.7], [3.7, 0.025, 3.7]],
+        [[-3.7, 0.025, -3.7], [-3.7, 0.025, 3.7]]
       ];
 
       floorLines.forEach(function (points) {
@@ -421,30 +418,30 @@
       });
 
       for (let i = 0; i < 7; i++) {
-        const x = -5.1 + i * 1.7;
+        const x = -3.15 + i * 1.05;
         const y = 2.15 + (i % 3) * 0.55;
         const color = lights[i % lights.length];
 
         line(root, [
-          [x - 0.45, y, -5.84],
-          [x - 0.1, y, -5.84],
-          [x + 0.15, y + 0.28, -5.84],
-          [x + 0.52, y + 0.28, -5.84]
+          [x - 0.3, y, -3.9],
+          [x - 0.1, y, -3.9],
+          [x + 0.12, y + 0.28, -3.9],
+          [x + 0.35, y + 0.28, -3.9]
         ], color);
 
         sphere(
           root,
-          [x + 0.52, y + 0.28, -5.8],
+          [x + 0.35, y + 0.28, -3.85],
           0.055,
           color
         );
       }
 
       [
-        [-4.1, -3.3, COLORS.purple],
-        [4.1, -3.3, COLORS.cyan],
-        [-4.4, 2.5, COLORS.pink],
-        [4.4, 2.5, COLORS.yellow]
+        [-3.1, -3.15, COLORS.purple],
+        [3.1, -3.15, COLORS.cyan],
+        [-3.1, 2.7, COLORS.pink],
+        [3.1, 2.7, COLORS.yellow]
       ].forEach(function (item) {
         create("a-circle", {
           position: item[0] + " 0.014 " + item[1],
@@ -1423,7 +1420,7 @@
 
         root = create("a-entity", {
           id: "programming-lab",
-          position: "0 0 1.2"
+          position: "0 0 0"
         }, container);
 
         buildEnvironment();

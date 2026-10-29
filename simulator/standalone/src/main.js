@@ -12,6 +12,7 @@
   var vrRoomNavTexture = null;
   var vrRoomNavGeometry = null;
   var vrRoomNavMaterial = null;
+  var cameraRoomId = 'hub';
   var currentLanguage = 'th';
   var activeRoom = null;
   var activeRoomId = null;
@@ -125,9 +126,21 @@
 
   function syncVRRoomNav() {
     var inVR = Boolean(scene && scene.is && scene.is('vr-mode'));
+    syncCameraHeight(inVR);
     if (vrRoomNav) vrRoomNav.setAttribute('visible', inVR ? 'true' : 'false');
     if (toolbar) toolbar.hidden = inVR;
     if (vrToggle) vrToggle.hidden = inVR;
+  }
+
+  function syncCameraHeight(inVR) {
+    if (!camera || !window.SimulatorCameraLocations) return;
+    var location = window.SimulatorCameraLocations.rooms[cameraRoomId] ||
+      window.SimulatorCameraLocations.defaults;
+    var position = Object.assign({}, location.position);
+    // With local-floor WebXR, the headset pose already includes the user's
+    // height above the floor. Keep only the desktop eye-height offset outside VR.
+    if (inVR) position.y = 0;
+    camera.setAttribute('position', position);
   }
 
   function contextFor(roomId) {
@@ -188,9 +201,11 @@
     if (activeRoom) activeRoom.unmount();
     activeRoom = null;
     activeRoomId = null;
+    cameraRoomId = 'hub';
     world.replaceChildren();
     status.textContent = '';
     window.SimulatorCameraLocations.apply('hub', camera);
+    syncCameraHeight(Boolean(scene && scene.is && scene.is('vr-mode')));
     world.append(window.SimulatorRoomStructure.create('hub'));
     activeRoom = window.SimulatorRooms.hub(contextFor('hub'));
     activeRoom.mount(world);
@@ -203,8 +218,10 @@
     if (activeRoom) activeRoom.unmount();
     activeRoom = null;
     activeRoomId = roomId;
+    cameraRoomId = roomId;
     world.replaceChildren();
     window.SimulatorCameraLocations.apply(roomId, camera);
+    syncCameraHeight(Boolean(scene && scene.is && scene.is('vr-mode')));
     world.append(window.SimulatorRoomStructure.create(roomId));
     activeRoom = definition.factory(contextFor(roomId));
     activeRoom.mount(world);
